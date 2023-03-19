@@ -1,7 +1,7 @@
 Тестовое задание: "Скандинавский аукцион"
 1. Загрузите локально репозиторий
 ``` bash
-$ git clone https://github.com/Mikhail-Litvintsev/scandinavian_auction.git
+git clone https://github.com/Mikhail-Litvintsev/scandinavian_auction.git
 ```
 2. В папке с проектом выполните команду:
 ``` bash

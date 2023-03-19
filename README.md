@@ -4,13 +4,10 @@
 
 Перед установкой: следует остановить прочие контейнеры docker.
 
-1. Загрузка репозитория:
+1. Установка проекта (в папку scandinavian_auction):
 ``` bash
 git clone https://github.com/Mikhail-Litvintsev/scandinavian_auction.git 
 cd scandinavian_auction/
-```
-2. В папке с проектом выполните команду:
-``` bash
 cp .env.example .env 
 docker compose build 
 docker compose up -d 

@@ -3,7 +3,7 @@
 ``` bash
 git clone https://github.com/Mikhail-Litvintsev/scandinavian_auction.git
 ```
-2. В папке с проектом выполните команду:
+2. В папке с проектом выполните команду (bash terminal):
 ``` bash
 cp .env.example .env 
 docker compose build 

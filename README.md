@@ -11,6 +11,5 @@ git clone https://github.com/Mikhail-Litvintsev/scandinavian_auction.git
 cp .env.example .env 
 docker compose build 
 docker compose up -d 
-docker compose exec backend /bin/bash -lc 'composer install && php artisan migrate:fresh && php artisan optimize &&  php artisan cache:clear'
-python -m webbrowser -t "http://localhost"
+docker compose exec backend /bin/bash -lc 'composer install && php artisan migrate:fresh && php artisan optimize &&  php artisan cache:clear' && python -m webbrowser -t "http://localhost"
 ``` 

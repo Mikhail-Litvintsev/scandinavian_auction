@@ -14,6 +14,9 @@ class ScandinavianAuctionService
         $this->setupCurrentBit();
     }
 
+    /**
+     * @return void
+     */
     private function setupCurrentBit(): void
     {
         if (Cache::get(ScandinavianAuctionTaxonomy::CACHE_KEY_CURRENT_BIT_DTO) === null) {
@@ -21,12 +24,20 @@ class ScandinavianAuctionService
         }
     }
 
+    /**
+     * @return $this
+     */
     public function setDefaultBit(): self
     {
         $this->setBit($this->getDefaultBit(), true);
         return $this;
     }
 
+    /**
+     * @param CurrentBitDto $currentBitDto
+     * @param bool $force
+     * @return $this
+     */
     public function setBit(CurrentBitDto $currentBitDto, bool $force = false): self
     {
         if ($force === false) {
@@ -35,18 +46,25 @@ class ScandinavianAuctionService
             }
         }
         $this->setCache($currentBitDto);
-        $model = ScandinavianAuction::upsertCurrentBitDto($currentBitDto);
+        $model = ScandinavianAuction::setCurrentBitDto($currentBitDto);
         $currentBitDto->currentAuctionId = $model->id;
         $this->setCache($currentBitDto);
         return $this;
     }
 
+    /**
+     * @param CurrentBitDto $currentBitDto
+     * @return void
+     */
     private function setCache(CurrentBitDto $currentBitDto): void
     {
         $currentBitDtoCache = serialize($currentBitDto);
         Cache::set(ScandinavianAuctionTaxonomy::CACHE_KEY_CURRENT_BIT_DTO, $currentBitDtoCache);
     }
 
+    /**
+     * @return CurrentBitDto
+     */
     public function getDefaultBit(): CurrentBitDto
     {
         $currentBitDto = new CurrentBitDto();
@@ -56,6 +74,9 @@ class ScandinavianAuctionService
         return $currentBitDto;
     }
 
+    /**
+     * @return CurrentBitDto
+     */
     public function getCurrentBit(): CurrentBitDto
     {
         $this->setupCurrentBit();
@@ -64,12 +85,19 @@ class ScandinavianAuctionService
     }
 
 
+    /**
+     * @return $this
+     */
     public function event(): self
     {
         event(new UpdateCurrentBit($this->getCurrentBit()));
         return $this;
     }
 
+    /**
+     * @param int $requestBit
+     * @return bool
+     */
     public function isBitAvailable(int $requestBit): bool
     {
         $currentBitDto = $this->getCurrentBit();
@@ -77,6 +105,9 @@ class ScandinavianAuctionService
         return $availableBit === $requestBit;
     }
 
+    /**
+     * @return $this
+     */
     public function reload(): self
     {
         ScandinavianAuction::setOneInActive(

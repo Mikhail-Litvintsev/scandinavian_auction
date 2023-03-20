@@ -7,30 +7,39 @@ use App\Services\ScandinavianAuction\ScandinavianAuctionService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id [int]
+ */
 class ScandinavianAuction extends Model
 {
     use HasFactory;
 
+    /**
+     * @var string
+     */
     protected $table = 'scandinavian_auctions';
-    protected $fillable = ['id', 'leaderName', 'step', 'currentBit', 'status'];
+    /**
+     * @var string[]
+     */
+    protected $fillable = ['leaderName', 'step', 'currentBit', 'status'];
 
-    public static function upsertCurrentBitDto(CurrentBitDto $currentBitDto): ScandinavianAuction
+    /**
+     * @param CurrentBitDto $currentBitDto
+     * @return ScandinavianAuction
+     */
+    public static function setCurrentBitDto(CurrentBitDto $currentBitDto): ScandinavianAuction
     {
         $id = $currentBitDto->currentAuctionId ?? 0;
-        if ($id) {
-            ScandinavianAuction::where('id', $id)->update(self::getDataFromCurrentBitDto($currentBitDto));
-            $model = ScandinavianAuction::find($id);
-        } else {
-            $model = ScandinavianAuction::create(
-                self::getDataFromCurrentBitDto(
-                    app(ScandinavianAuctionService::class)->getDefaultBit()
-                )
-            );
-        }
+        $model = ScandinavianAuction::updateOrCreate(['id' => $id, 'status' => true],
+            self::getDataFromCurrentBitDto($currentBitDto));
         self::setOtherInActive($model->id);
         return $model;
     }
 
+    /**
+     * @param CurrentBitDto $currentBitDto
+     * @return array
+     */
     public static function getDataFromCurrentBitDto(CurrentBitDto $currentBitDto): array
     {
         return [
@@ -41,11 +50,19 @@ class ScandinavianAuction extends Model
         ];
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public static function setOtherInActive(int $id): bool
     {
         return ScandinavianAuction::where('id', '<>', $id)->where(['status' => true])->update(['status' => false]);
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public static function setOneInActive(int $id): bool
     {
         return self::where(['id' => $id])->update(['status' => false]);

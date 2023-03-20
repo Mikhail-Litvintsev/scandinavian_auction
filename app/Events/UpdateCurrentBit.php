@@ -32,6 +32,9 @@ class UpdateCurrentBit implements ShouldBroadcast
         return new Channel('update-current-bit-channel');
     }
 
+    /**
+     * @return string
+     */
     public function broadcastAs()
     {
         return 'update-current-bit';
